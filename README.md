@@ -2,6 +2,8 @@
 
 Manage membership of managed host with Windows AD.
 
+[![Build Status](https://travis-ci.org/Caseraw/ansible_role_ad_membership.svg?branch=master)](https://travis-ci.org/Caseraw/ansible_role_ad_membership) [<img src="https://img.shields.io/ansible/role/47179">](https://galaxy.ansible.com/caseraw/ansible_role_ad_membership) [<img src="https://img.shields.io/ansible/role/d/47179">](https://galaxy.ansible.com/caseraw/ansible_role_ad_membership) [<img src="https://img.shields.io/ansible/quality/47179">](https://galaxy.ansible.com/caseraw/ansible_role_ad_membership)
+
 - [Ansible role AD membership](#ansible-role-ad-membership)
   - [License](#license)
   - [Author Information](#author-information)
