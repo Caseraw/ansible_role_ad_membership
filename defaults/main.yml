@@ -1,0 +1,49 @@
+---
+### Software packages required for joining a Windows AD
+role_ad_membership_required_packages:
+  - openldap-clients
+  - krb5-workstation
+  - krb5-libs
+  - adcli
+  - realmd
+  - authconfig
+  - samba-client
+  - samba-common
+  - samba-common-tools
+  - sssd
+  - sssd-ad
+  - sssd-krb5
+  - oddjob
+  - oddjob-mkhomedir
+
+### AD Server/Computer Organizational Unit
+role_ad_membership_computer_ou: ''
+
+### Netbios max hostname length
+role_ad_membership_netbios_max_length: 15
+
+### Leave AD if required
+## This will remove the Kerberos keytab and cleanup the sssd configuration on
+## the 'client'. It will also remove the AD computer object.
+role_ad_membership_leave_ad: False
+
+### Managing AD groups.
+## For better maintainability, the group list is built during runtime by
+## combining all lists together. This will provide the freedom of declaring
+## custom group lists for granular control. The lists require a naming
+## convention by using a pattern. The pattern is rendered as a single list
+## which can be used for iteration with variable:
+## 'role_ad_membership_allowed_group_list'. The list name pattern needs to
+## start with: 'role_ad_membership_allowed_group_list_'
+
+role_ad_membership_allowed_group_list_default: []
+
+## Example of a list for default inheritance:
+# role_ad_membership_allowed_group_list_default:
+#   - Special-Group-01
+#   - super_special_group_01
+
+### Molecule dummy switch
+role_ad_membership_molecule_dummy: False
+
+...

@@ -1,0 +1,31 @@
+---
+dependency:
+  name: galaxy
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      remote_tmp: /tmp
+      stdout_callback: yaml
+      bin_ansible_callbacks: True
+  playbooks:
+    converge: converge.yml
+scenario:
+  name: default
+lint: |
+  yamllint . -c molecule/default/yamllint.yml -f auto -s
+  ansible-lint
+driver:
+  name: docker
+platforms:
+  - name: "${role_name:-ansible_role_ad_membership}-${image:-ansible-molecule-centos}-${tag:-7}"
+    image: "${namespace:-caseraw}/${image:-ansible-molecule-centos}:${tag:-7}"
+    command: "${cmd:-/usr/sbin/init}"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: True
+    pre_build_image: True
+verifier:
+  name: ansible
+
+...

@@ -1,0 +1,29 @@
+---
+- name: Restart realmd service
+  systemd:
+    name: realmd
+    state: restarted
+    daemon_reload: True
+    enabled: True
+    masked: False
+  listen: restart_realmd
+
+- name: Restart sssd service
+  systemd:
+    name: sssd
+    state: restarted
+    daemon_reload: True
+    enabled: True
+    masked: False
+  listen: restart_sssd
+
+- name: Restart oddjobd service
+  systemd:
+    name: oddjobd
+    state: restarted
+    daemon_reload: True
+    enabled: True
+    masked: False
+  listen: restart_oddjobd
+
+...
