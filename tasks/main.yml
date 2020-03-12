@@ -60,17 +60,29 @@
     - not role_ad_membership_leave_ad
     - not role_ad_membership_molecule_dummy
 
-- name: Leave Windows AD
-  shell: '{{ item }}'
-  register: role_ad_membership_leave_cmd_register
-  loop:
-    - '/usr/bin/echo {{ role_ad_membership_sa_password }} | /usr/sbin/realm leave -r -v --user={{ role_ad_membership_sa_username }}'
-    - '/usr/bin/echo {{ role_ad_membership_sa_password }} | /usr/sbin/adcli delete-computer -v --login-user={{ role_ad_membership_sa_username }} --domain={{ ansible_domain }} --domain-controller={{ ansible_domain | upper }} --stdin-password'
+- name: Leave AD
+  block:
+    - name: Leave Windows AD | part 1
+      shell: >
+            /usr/bin/echo {{ role_ad_membership_sa_password }} |
+            /usr/sbin/realm leave -r -v --user={{ role_ad_membership_sa_username }}
+      register: role_ad_membership_leave_cmd_register
+      failed_when: False
+      no_log: True
+
+    - name: Leave Windows AD | part 2
+      shell: >
+            /usr/bin/echo {{ role_ad_membership_sa_password }} |
+            /usr/sbin/adcli delete-computer -v
+            --login-user={{ role_ad_membership_sa_username }}
+            --domain={{ ansible_domain }}
+            --domain-controller={{ ansible_domain | upper }}
+            --stdin-password
+      register: role_ad_membership_leave_cmd_register
+      failed_when: False
+      no_log: True
   when:
     - '"configured: kerberos-member" in role_ad_membership_register_discover_realm.stdout'
     - role_ad_membership_leave_ad
     - not role_ad_membership_molecule_dummy
-  failed_when: False
-  no_log: True
-
 ...
