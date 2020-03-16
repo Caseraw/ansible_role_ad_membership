@@ -21,7 +21,7 @@
 
     - name: Join AD
       shell: >
-                /usr/bin/echo {{ role_ad_membership_sa_password }} |
+                /usr/bin/echo '{{ role_ad_membership_sa_password }}' |
                 /usr/sbin/realm join -v --user={{ role_ad_membership_sa_username }}
                 --computer-ou={{ role_ad_membership_computer_ou }}
                 --computer-name={{ ansible_hostname | upper }}
@@ -72,7 +72,7 @@
 
     - name: Leave Windows AD | part 2
       shell: >
-            /usr/bin/echo {{ role_ad_membership_sa_password }} |
+            /usr/bin/echo '{{ role_ad_membership_sa_password }}' |
             /usr/sbin/adcli delete-computer -v
             --login-user={{ role_ad_membership_sa_username }}
             --domain={{ ansible_domain }}
