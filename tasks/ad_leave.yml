@@ -1,0 +1,36 @@
+---
+- name: Leave Windows AD
+  shell: >
+        set -o pipefail &&
+        /usr/bin/echo '{{ role_ad_membership_sa_password }}' |
+        /usr/sbin/realm leave -v
+        --user={{ role_ad_membership_sa_username }}
+        --remove
+        --unattended
+        {{ ansible_domain }}
+  register: role_ad_membership_leave_cmd_register
+  when:
+    - role_ad_membership_leave_ad
+  failed_when: False
+  no_log: True
+  notify:
+    - stop_realmd
+    - stop_sssd
+    - clean_cache
+
+- name: Remove computer object from Windows AD
+  shell: >
+        set -o pipefail &&
+        /usr/bin/echo '{{ role_ad_membership_sa_password }}' |
+        /usr/sbin/adcli delete-computer -v
+        --login-user={{ role_ad_membership_sa_username }}
+        --domain={{ ansible_domain }}
+        --domain-controller={{ role_ad_membership_ad_controller | lower }}
+        --stdin-password
+  register: role_ad_membership_delete_object_register
+  when:
+    - role_ad_membership_leave_ad
+  failed_when: False
+  no_log: True
+
+...
