@@ -8,6 +8,13 @@
     masked: False
   listen: restart_realmd
 
+- name: Stop realmd service
+  systemd:
+    name: realmd
+    state: stopped
+    enabled: False
+  listen: stop_realmd
+
 - name: Restart sssd service
   systemd:
     name: sssd
@@ -17,6 +24,13 @@
     masked: False
   listen: restart_sssd
 
+- name: Stop sssd service
+  systemd:
+    name: sssd
+    state: stopped
+    enabled: False
+  listen: stop_sssd
+
 - name: Restart oddjobd service
   systemd:
     name: oddjobd
@@ -25,5 +39,12 @@
     enabled: True
     masked: False
   listen: restart_oddjobd
+
+- name: Clean all sss cache
+  command: /usr/sbin/sss_cache -E
+  args:
+    warn: False
+  changed_when: False
+  listen: clean_cache
 
 ...
