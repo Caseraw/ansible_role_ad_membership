@@ -1,0 +1,24 @@
+---
+- name: Ensure required packages are installed
+  package:
+    name: '{{ role_ad_membership_required_packages }}'
+    state: present
+
+- name: Select AD controller
+  set_fact:
+    role_ad_membership_ad_controller: '{% if role_ad_membership_use_global_domain_controller %}
+                                      {{ ansible_domain }}
+                                      {% else %}
+                                        {% if role_ad_membership_ad_controller_random_selection %}
+                                        {{ role_ad_membership_ad_controllers | random }}
+                                        {% else %}{{ role_ad_membership_ad_controllers | first }}
+                                        {% endif %}
+                                      {% endif %}'
+
+- name: Check existing realm configuration
+  command: /usr/sbin/realm list
+  register: role_ad_membership_register_discover_realm
+  changed_when: False
+  failed_when: False
+
+...
