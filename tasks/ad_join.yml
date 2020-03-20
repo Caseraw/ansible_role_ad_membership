@@ -1,0 +1,24 @@
+---
+- name: Check if short hostname length is compliant
+  assert:
+    that: ansible_hostname | length <= role_ad_membership_netbios_max_length
+    msg: 'Hostname too long. Maximum Netbios characters are: {{ role_ad_membership_netbios_max_length }}'
+
+- name: Join AD
+  shell: >
+          set -o pipefail &&
+          /usr/bin/echo '{{ role_ad_membership_sa_password }}' |
+          /usr/sbin/realm join -v --user={{ role_ad_membership_sa_username }}
+          --computer-ou={{ role_ad_membership_computer_ou }}
+          --computer-name={{ ansible_hostname | upper }}
+          --user-principal=host/{{ ansible_hostname }}@{{ ansible_domain | upper }}
+          --os-name={{ ansible_distribution }}
+          --os-version={{ ansible_distribution_version }}
+          {{ role_ad_membership_ad_controller }}
+  register: role_ad_membership_join_cmd_register
+  when:
+    - role_ad_membership_register_discover_realm.stdout | length < 1
+    - not role_ad_membership_leave_ad
+  no_log: True
+
+...
