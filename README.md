@@ -57,6 +57,9 @@ Compatible with the following list of operating systems:
 | role_ad_membership_sa_username | Service account username for the AD (encrypted). |
 | role_ad_membership_sa_password | Service account password for the AD (encrypted). |
 | role_ad_membership_required_packages | List of required packages to install. |
+| role_ad_membership_use_global_domain_controller | Whether to use the global AD controller based on domain. |
+| role_ad_membership_ad_controller_random_selection | Whther to randomly select an AD controller or just the first in the list. |
+| role_ad_membership_ad_controllers | A list of AD controllers. |
 | role_ad_membership_computer_ou | The AD Organizational Unit to place the Computer object in. |
 | role_ad_membership_netbios_max_length | Maximum character length for Netbios hostname check. |
 | role_ad_membership_leave_ad | Whether to leave the AD and remove the Computer object from the OU. |
@@ -92,6 +95,11 @@ Compatible with the following list of operating systems:
           - sssd-krb5
           - oddjob
           - oddjob-mkhomedir
+        role_ad_membership_use_global_domain_controller: False
+        role_ad_membership_ad_controller_random_selection: False
+        role_ad_membership_ad_controllers:
+          - ad1.example.com
+          - ad2.example.com
         role_ad_membership_computer_ou: OU=Servers,DC=example,DC=com
         role_ad_membership_netbios_max_length: 15
         role_ad_membership_leave_ad: False
