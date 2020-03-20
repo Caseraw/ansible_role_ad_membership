@@ -16,6 +16,12 @@ role_ad_membership_required_packages:
   - oddjob
   - oddjob-mkhomedir
 
+### AD Controllers
+## In case of a large forest provide the PDC FQDN
+role_ad_membership_use_global_domain_controller: True
+role_ad_membership_ad_controller_random_selection: False
+role_ad_membership_ad_controllers: []
+
 ### AD Server/Computer Organizational Unit
 role_ad_membership_computer_ou: ''
 
