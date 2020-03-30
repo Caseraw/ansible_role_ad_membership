@@ -9,7 +9,8 @@
 - name: Import tasks for joining the Windows AD
   import_tasks: ad_join.yml
   when:
-    - role_ad_membership_register_discover_realm.stdout | length < 1
+    - role_ad_membership_register_domain_state
+    - not role_ad_membership_register_join_state
     - not role_ad_membership_leave_ad
     - not role_ad_membership_molecule_dummy
   tags:
@@ -28,6 +29,7 @@
   import_tasks: ad_leave.yml
   when:
     - role_ad_membership_leave_ad
+    - role_ad_membership_register_join_state
     - not role_ad_membership_molecule_dummy
   tags:
     - tag_role_ad_membership_ad_leave
