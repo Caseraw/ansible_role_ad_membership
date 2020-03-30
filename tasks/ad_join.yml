@@ -4,21 +4,44 @@
     that: ansible_hostname | length <= role_ad_membership_netbios_max_length
     msg: 'Hostname too long. Maximum Netbios characters are: {{ role_ad_membership_netbios_max_length }}'
 
-- name: Join AD
+- name: Create computer object in Windows AD
+  shell: >
+        set -o pipefail &&
+        /usr/bin/echo '{{ role_ad_membership_sa_password }}' |
+        /usr/sbin/adcli preset-computer -v
+        --login-user={{ role_ad_membership_sa_username }}
+        --domain={{ ansible_domain }}
+        --domain-ou={{ role_ad_membership_computer_ou }}
+        --domain-controller={{ role_ad_membership_ad_controller }}
+        --user-principal
+        --os-name={{ ansible_distribution }}
+        --os-version={{ ansible_distribution_version }}
+        --stdin-password
+        {{ ansible_fqdn }}
+  register: role_ad_membership_register_create_ad_object
+  when:
+    - not role_ad_membership_leave_ad
+    - not role_ad_membership_register_join_state
+  no_log: True
+
+- name: Join Windows AD
   shell: >
           set -o pipefail &&
           /usr/bin/echo '{{ role_ad_membership_sa_password }}' |
           /usr/sbin/realm join -v --user={{ role_ad_membership_sa_username }}
           --computer-ou={{ role_ad_membership_computer_ou }}
           --computer-name={{ ansible_hostname | upper }}
-          --user-principal=host/{{ ansible_hostname }}@{{ ansible_domain | upper }}
+          --user-principal=host/{{ ansible_fqdn }}@{{ ansible_domain | upper }}
           --os-name={{ ansible_distribution }}
           --os-version={{ ansible_distribution_version }}
+          --client-software=sssd
+          --server-software=active-directory
+          --membership-software=adcli
           {{ role_ad_membership_ad_controller }}
-  register: role_ad_membership_join_cmd_register
+  register: role_ad_membership_register_join_ad_cmd
   when:
-    - role_ad_membership_register_discover_realm.stdout | length < 1
     - not role_ad_membership_leave_ad
+    - not role_ad_membership_register_join_state
   no_log: True
 
 ...
