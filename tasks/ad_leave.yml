@@ -8,15 +8,15 @@
         --remove
         --unattended
         {{ ansible_domain }}
-  register: role_ad_membership_leave_cmd_register
+  register: role_ad_membership_register_leave_ad_cmd
   when:
     - role_ad_membership_leave_ad
-  failed_when: False
-  no_log: True
+    - role_ad_membership_register_join_state
   notify:
-    - stop_realmd
     - stop_sssd
-    - clean_cache
+    - clean_sss_cache
+  ignore_errors: True
+  no_log: True
 
 - name: Remove computer object from Windows AD
   shell: >
@@ -25,12 +25,13 @@
         /usr/sbin/adcli delete-computer -v
         --login-user={{ role_ad_membership_sa_username }}
         --domain={{ ansible_domain }}
-        --domain-controller={{ role_ad_membership_ad_controller | lower }}
+        --domain-controller={{ role_ad_membership_ad_controller }}
         --stdin-password
-  register: role_ad_membership_delete_object_register
+  register: role_ad_membership_register_delete_ad_object
   when:
     - role_ad_membership_leave_ad
-  failed_when: False
+    - role_ad_membership_register_join_state
+  ignore_errors: True
   no_log: True
 
 ...
