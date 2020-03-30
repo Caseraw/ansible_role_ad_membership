@@ -1,20 +1,4 @@
 ---
-- name: Restart realmd service
-  systemd:
-    name: realmd
-    state: restarted
-    daemon_reload: True
-    enabled: True
-    masked: False
-  listen: restart_realmd
-
-- name: Stop realmd service
-  systemd:
-    name: realmd
-    state: stopped
-    enabled: False
-  listen: stop_realmd
-
 - name: Restart sssd service
   systemd:
     name: sssd
@@ -31,20 +15,10 @@
     enabled: False
   listen: stop_sssd
 
-- name: Restart oddjobd service
-  systemd:
-    name: oddjobd
-    state: restarted
-    daemon_reload: True
-    enabled: True
-    masked: False
-  listen: restart_oddjobd
-
 - name: Clean all sss cache
   command: /usr/sbin/sss_cache -E
   args:
     warn: False
-  changed_when: False
-  listen: clean_cache
+  listen: clean_sss_cache
 
 ...
