@@ -3,19 +3,30 @@
 [sssd]
 domains = {{ ansible_domain }}
 config_file_version = 2
-services = nss, pam, sudo, autofs, ssh
+services = nss, pam
 
 [domain/{{ ansible_domain }}]
+id_provider = ad
+auth_provider = krb5
+chpass_provider = krb5
+access_provider = simple
+debug_level = 3
+dyndns_update = False
+
 ad_domain = {{ ansible_domain }}
 krb5_realm = {{ ansible_domain | upper }}
-realmd_tags = manages-system joined-with-samba
+realmd_tags = manages-system joined-with-adcli
 cache_credentials = True
-id_provider = ad
 krb5_store_password_if_offline = True
-default_shell = /bin/bash
-ldap_sasl_authid = {{ ansible_hostname | upper }}$
+
+ldap_sasl_mech = GSSAPI
+ldap_sasl_authid = host/{{ ansible_fqdn }}@{{ ansible_domain | upper }}
+ldap_referrals = False
+ldap_schema = rfc2307bis
+ldap_user_search_base = {{ role_ad_membership_ou_search_base }}
 ldap_id_mapping = True
+
 use_fully_qualified_names = False
+default_shell = /bin/bash
 fallback_homedir = /home/%u
-access_provider = simple
 simple_allow_groups = {{ role_ad_membership_allowed_group_list | join(', ') }}
