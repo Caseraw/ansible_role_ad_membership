@@ -1,8 +1,14 @@
 # CHANGELOG
 
+## v0.2.1
+
+Variable name issue in the `sssd.conf` template.
+
+Fixed `role_ad_membership_ou_search_base` into `role_ad_membership_ou_user_search_base`
+
 ## v0.2.0
 
-Fixed additional unforseen issues.
+Fixed additional unforeseen issues.
 
 **Functionalities:**
 

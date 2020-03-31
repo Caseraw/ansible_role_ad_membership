@@ -23,7 +23,7 @@ ldap_sasl_mech = GSSAPI
 ldap_sasl_authid = host/{{ ansible_fqdn }}@{{ ansible_domain | upper }}
 ldap_referrals = False
 ldap_schema = rfc2307bis
-ldap_user_search_base = {{ role_ad_membership_ou_search_base }}
+ldap_user_search_base = {{ role_ad_membership_ou_user_search_base }}
 ldap_id_mapping = True
 
 use_fully_qualified_names = False
