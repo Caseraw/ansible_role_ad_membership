@@ -1,7 +1,7 @@
 ---
 ### Software packages required for joining a Windows AD
 role_ad_membership_required_packages:
-  - openldap-clients
+  # - openldap-clients
   - krb5-workstation
   - krb5-libs
   - adcli
